@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>منظّم المستندات</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:#f1f5f2;color:#1f2d26;font-family:'Tahoma','Arial','Segoe UI',sans-serif;font-size:15px}
+button,input,select{font-family:inherit;font-size:inherit}
+svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;display:block}
+i{display:inline-flex;font-style:normal}
+header{background:#1a5f3a;color:#fff;padding:12px 14px 10px;position:sticky;top:0;z-index:20}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+h1{margin:0;font-size:20px}
+.pill{background:#2d8659;color:#fff;border:1px solid rgba(255,255,255,.4);border-radius:18px;padding:6px 14px;cursor:pointer;display:flex;gap:6px;align-items:center;transition:transform .25s}
+.pill:active{transform:scale(.92)}
+.pill svg{width:16px;height:16px}
+.dev{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;margin-top:8px;opacity:.95}
+.ct{display:inline-flex;gap:4px;align-items:center}.ct svg{width:14px;height:14px}
+main{padding:12px 12px 150px;max-width:640px;margin:0 auto}
+.sbox{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #cfdcd3;border-radius:12px;padding:0 12px}
+.sbox input{flex:1;border:0;outline:0;padding:11px 0;background:transparent;min-width:0}
+.sbox svg{color:#2d8659}
+.crumbs{display:flex;flex-wrap:wrap;align-items:center;gap:2px;margin:12px 0 8px;font-size:13px}
+.crumbs button{background:none;border:0;color:#1a5f3a;font-weight:bold;padding:4px 6px;cursor:pointer}
+.crumbs .sep svg{width:14px;height:14px;color:#8aa395}
+[dir=rtl] .sep svg,[dir=rtl] .flip svg{transform:scaleX(-1)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+.st{background:#fff;border-radius:12px;padding:10px 4px;text-align:center;border-top:3px solid #2d8659}
+.st b{display:block;font-size:20px;color:#1a5f3a}.st span{font-size:11px;color:#5d7266}
+.bar{display:flex;justify-content:space-between;align-items:center;margin:8px 0}
+.bar b{color:#1a5f3a}
+.seg{display:flex;border:1px solid #1a5f3a;border-radius:10px;overflow:hidden}
+.seg button{background:#fff;color:#1a5f3a;border:0;padding:6px 12px;cursor:pointer}
+.seg button.on{background:#1a5f3a;color:#fff}
+.seg svg{width:18px;height:18px}
+.items.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.items.list{display:flex;flex-direction:column;gap:8px}
+.it{background:#fff;border-radius:14px;padding:10px;box-shadow:0 1px 3px rgba(26,95,58,.12);transition:box-shadow .2s}
+.it:active{box-shadow:0 0 0 2px #2d8659}
+.main{display:flex;align-items:center;gap:10px;cursor:pointer;min-width:0}
+.grid .main{flex-direction:column;text-align:center}
+.ico{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:none;color:#fff}
+.ico svg{width:26px;height:26px}
+.nm{min-width:0;flex:1;width:100%}
+.nm b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px}
+.nm small{color:#6c8074;font-size:11px}
+.acts{display:flex;justify-content:space-around;margin-top:8px;border-top:1px solid #e6eee9;padding-top:6px}
+.acts button{background:none;border:0;color:#2d8659;padding:6px;cursor:pointer}
+.acts button.dg{color:#c0392b}
+.acts svg{width:19px;height:19px}
+.empty{text-align:center;color:#6c8074;padding:36px 10px}
+.empty svg{width:72px;height:72px;margin:0 auto 10px;color:#9fbfae;stroke-width:1.2}
+.empty b{display:block;color:#1a5f3a;margin-bottom:4px}
+nav{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;border-top:1px solid #d7e3db;z-index:30}
+nav button{flex:1;background:none;border:0;padding:8px 0 7px;color:#7f9487;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;cursor:pointer}
+nav button svg{width:24px;height:24px}
+nav button.on{color:#1a5f3a;font-weight:bold}
+.fab{position:fixed;bottom:74px;z-index:25;width:52px;height:52px;border-radius:50%;border:0;background:#1a5f3a;color:#fff;box-shadow:0 3px 8px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.fab.b{background:#2d8659;bottom:136px}
+[dir=rtl] .fab{left:14px}[dir=ltr] .fab{right:14px}
+.card{background:#fff;border-radius:14px;padding:14px;margin-bottom:12px}
+.card h3{margin:0 0 10px;color:#1a5f3a;font-size:16px}
+.card p{margin:4px 0;line-height:1.7}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#1a5f3a;color:#fff;border:0;border-radius:12px;padding:12px;margin-top:8px;cursor:pointer}
+.btn.s{background:#2d8659}.btn.o{background:#fff;color:#1a5f3a;border:1px solid #1a5f3a}.btn.d{background:#c0392b}
+.btn svg{width:20px;height:20px}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;display:none;align-items:center;justify-content:center;padding:14px}
+#ov.on{display:flex}
+.box{background:#fff;border-radius:16px;width:100%;max-width:440px;max-height:90vh;overflow:auto;padding:16px}
+.box h2{margin:0 0 12px;font-size:17px;color:#1a5f3a}
+.box label{display:block;margin:10px 0 4px;font-size:13px;color:#4a5f53}
+.box input[type=text],.box input[type=tel],.box select{width:100%;padding:10px;border:1px solid #bcd0c3;border-radius:10px;background:#fff}
+.box input[type=file]{width:100%;padding:8px 0}
+.row{display:flex;gap:8px;margin-top:14px}.row .btn{margin-top:0}
+.pv{text-align:center}.pv img,.pv video{max-width:100%;max-height:60vh;border-radius:8px}.pv audio{width:100%}
+.pv iframe{width:100%;height:60vh;border:1px solid #cfdcd3;border-radius:8px}
+.pv pre{text-align:start;white-space:pre-wrap;word-break:break-word;max-height:60vh;overflow:auto;background:#f1f5f2;padding:10px;border-radius:8px;margin:0}
+.steps{line-height:1.9;padding-inline-start:0;margin:0;list-style:none}
+.steps li{padding:6px 10px;background:#eef5f0;border-radius:8px;margin-bottom:6px}
+#toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:#1f2d26;color:#fff;padding:10px 18px;border-radius:22px;z-index:70;display:none;max-width:90%;text-align:center;font-size:14px}
+#toast.er{background:#c0392b}
+#ld{position:fixed;inset:0;background:rgba(255,255,255,.75);z-index:60;display:none;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:#1a5f3a;font-weight:bold}
+#ld.on{display:flex}
+.sp{width:38px;height:38px;border:4px solid #bcd9c8;border-top-color:#1a5f3a;border-radius:50%;animation:r .8s linear infinite}
+@keyframes r{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top"><h1 data-i18n="appTitle">منظّم المستندات</h1><button class="pill" id="langBtn"><i data-ic="globe"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg></i><span id="langTxt">English</span></button></div>
+  <div class="dev"><span data-i18n="developer">تطوير: عدنان صبياني</span><span class="ct"><i data-ic="phone"><svg viewBox="0 0 24 24"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2"/></svg></i>966542103430</span><span class="ct"><i data-ic="wa"><svg viewBox="0 0 24 24"><path d="M4 20l1.5-4A8 8 0 1 1 8 18.5z"/></svg></i><span data-i18n="whatsapp">واتساب</span>: 966509600071</span></div>
+</header>
+<main id="main"><noscript>JavaScript is disabled / جافا سكربت معطّل</noscript></main>
+<button class="fab b" id="fabFile"><i data-ic="file"><svg viewBox="0 0 24 24"><path d="M6 2h8l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM14 2v5h5"/></svg></i></button>
+<button class="fab" id="fabFolder"><i data-ic="folder"><svg viewBox="0 0 24 24"><path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></i></button>
+<nav>
+  <button data-pg="home"><i data-ic="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg></i><span data-i18n="home">الرئيسية</span></button>
+  <button data-pg="add"><i data-ic="plus"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></i><span data-i18n="add">إضافة</span></button>
+  <button data-pg="settings"><i data-ic="gear"><svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0M14 4v4M8 10v4M16 16v4"/></svg></i><span data-i18n="settings">الإعدادات</span></button>
+</nav>
+<div id="ov"><div class="box" id="box"></div></div>
+<div id="ld"><div class="sp"></div><span data-i18n="uploading">جارٍ المعالجة...</span></div>
+<div id="toast"></div>
+<input type="file" id="impIn" accept=".json,application/json" style="display:none">
+
+<script>
+window.onerror=function(m,u,l){var e=document.getElementById("main");if(e)e.innerHTML='<div style="background:#fdecea;color:#7b1d12;padding:12px;border-radius:10px;direction:ltr;font-size:13px">Error: '+m+' (line '+l+')</div>'+e.innerHTML};
+(function(){
+"use strict";
+/* ---------- Translations ---------- */
+var T={
+ar:{appTitle:"منظّم المستندات",developer:"تطوير: عدنان صبياني",whatsapp:"واتساب",home:"الرئيسية",add:"إضافة",settings:"الإعدادات",
+search:"ابحث عن ملف أو مجلد...",folders:"المجلدات",files:"الملفات",images:"الصور",pdfs:"ملفات PDF",root:"الرئيسية",
+newFolder:"مجلد جديد",newFile:"ملف جديد",folderName:"اسم المجلد",parentFolder:"المجلد",create:"إنشاء",cancel:"إلغاء",save:"حفظ",
+del:"حذف",rename:"إعادة تسمية",preview:"معاينة",share:"مشاركة",download:"تنزيل",close:"إغلاق",name:"الاسم",chooseFile:"اختر ملفًا أو أكثر",
+uploading:"جارٍ المعالجة...",emptyT:"لا توجد عناصر هنا",emptyH:"أنشئ مجلدًا أو ارفع ملفك الأول من زر الإضافة.",noResults:"لا نتائج مطابقة للبحث",
+confDel:"هل تريد حذف «%s»؟",confDelFolder:"سيتم حذف المجلد «%s» وكل ما بداخله نهائيًا. هل تريد المتابعة؟",
+deleted:"تم الحذف",created:"تم إنشاء المجلد",renamed:"تمت إعادة التسمية",uploaded:"تم رفع %s ملف",tooBig:"الملف «%s» أكبر من 10 ميجابايت",
+storageFull:"مساحة التخزين ممتلئة، احذف بعض الملفات أو صدّر نسخة احتياطية",errName:"اكتب اسمًا صحيحًا",errRead:"تعذّرت قراءة الملف",
+shareTitle:"مشاركة عبر واتساب",phoneOpt:"رقم واتساب المستلم (اختياري، مع رمز الدولة)",openWA:"فتح واتساب",
+step1:"1. تم تنزيل الملف على جهازك.",step2:"2. سيُفتح واتساب مع رسالة جاهزة.",step3:"3. اضغط زر المرفقات في واتساب واختر الملف المنزّل.",
+shareMsg:"ملف: %s",downloaded:"تم تنزيل الملف",
+backup:"النسخ الاحتياطي",exportB:"تصدير نسخة احتياطية (JSON)",importB:"استيراد نسخة احتياطية",clearAll:"مسح كل البيانات",
+clear1:"سيتم حذف جميع المجلدات والملفات. هل أنت متأكد؟",clear2:"تأكيد أخير: لا يمكن التراجع عن هذا الإجراء. مسح كل شيء؟",
+cleared:"تم مسح كل البيانات",exported:"تم تصدير النسخة الاحتياطية",imported:"تم استيراد البيانات",importErr:"ملف النسخة الاحتياطية غير صالح",
+importConf:"سيتم استبدال البيانات الحالية بالنسخة المستوردة. متابعة؟",about:"عن التطبيق",
+aboutTxt:"منظّم المستندات: ينظّم ملفاتك في مجلدات متداخلة ويعمل بدون إنترنت. تُحفظ البيانات على جهازك فقط.",contact:"التواصل مع المطوّر",
+noPrev:"لا تتوفر معاينة لهذا النوع. يمكنك تنزيل الملف.",grid:"شبكة",list:"قائمة",results:"نتائج البحث",addHint:"ماذا تريد أن تضيف؟",
+size:"الحجم",yes:"نعم، تابع",phone:"الهاتف",inside:"عنصر",tipLimit:"الحد الأقصى للملف 10 ميجابايت، والمساحة الكلية للتخزين المحلي نحو 5 ميجابايت."},
+en:{appTitle:"Document Organizer",developer:"Developer: Adnan Subyani",whatsapp:"WhatsApp",home:"Home",add:"Add",settings:"Settings",
+search:"Search for a file or folder...",folders:"Folders",files:"Files",images:"Images",pdfs:"PDF files",root:"Home",
+newFolder:"New folder",newFile:"New file",folderName:"Folder name",parentFolder:"Folder",create:"Create",cancel:"Cancel",save:"Save",
+del:"Delete",rename:"Rename",preview:"Preview",share:"Share",download:"Download",close:"Close",name:"Name",chooseFile:"Choose one or more files",
+uploading:"Processing...",emptyT:"Nothing here yet",emptyH:"Create a folder or upload your first file with the add button.",noResults:"No results match your search",
+confDel:"Delete \"%s\"?",confDelFolder:"The folder \"%s\" and everything inside it will be permanently deleted. Continue?",
+deleted:"Deleted",created:"Folder created",renamed:"Renamed",uploaded:"%s file(s) uploaded",tooBig:"\"%s\" is larger than 10 MB",
+storageFull:"Storage is full. Delete some files or export a backup",errName:"Enter a valid name",errRead:"Could not read the file",
+shareTitle:"Share via WhatsApp",phoneOpt:"Recipient WhatsApp number (optional, with country code)",openWA:"Open WhatsApp",
+step1:"1. The file was downloaded to your device.",step2:"2. WhatsApp opens with a ready message.",step3:"3. Tap the attach button in WhatsApp and pick the downloaded file.",
+shareMsg:"File: %s",downloaded:"File downloaded",
+backup:"Backup",exportB:"Export backup (JSON)",importB:"Import backup",clearAll:"Clear all data",
+clear1:"All folders and files will be deleted. Are you sure?",clear2:"Final confirmation: this cannot be undone. Erase everything?",
+cleared:"All data cleared",exported:"Backup exported",imported:"Data imported",importErr:"Invalid backup file",
+importConf:"Current data will be replaced by the imported backup. Continue?",about:"About",
+aboutTxt:"Document Organizer keeps your files in nested folders and works offline. Data is stored on your device only.",contact:"Contact the developer",
+noPrev:"No preview for this type. You can download the file.",grid:"Grid",list:"List",results:"Search results",addHint:"What do you want to add?",
+size:"Size",yes:"Yes, continue",phone:"Phone",inside:"item(s)",tipLimit:"Max file size is 10 MB; total local storage is about 5 MB."}
+};
+var lang=gs("lang")||"ar",view=gs("view")||"grid",cur=null,q="",pg="home",urlKeep=null;
+function t(k){return (T[lang]&&T[lang][k])||T.ar[k]||k}
+function f(k,v){return t(k).replace("%s",v)}
+function gs(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function ss(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+
+/* ---------- SVG icons (inline, no emoji, no external files) ---------- */
+var P={folder:"M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z",
+file:"M6 2h8l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM14 2v5h5",
+image:"M4 4h16v16H4zM8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M20 16l-5-5-9 9",
+video:"M3 6h12v12H3zM15 10l6-3v10l-6-3",
+audio:"M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0M21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0",
+home:"M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10",plus:"M12 5v14M5 12h14",
+gear:"M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0M14 4v4M8 10v4M16 16v4",
+search:"M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-5-5",
+grid:"M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z",list:"M8 6h13M8 12h13M8 18h13M3 6h1M3 12h1M3 18h1",
+trash:"M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13",edit:"M4 20h4L19 9l-4-4L4 16zM14 6l4 4",
+eye:"M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6",
+share:"M18 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6M6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6M18 22a3 3 0 1 0 0-6 3 3 0 0 0 0 6M8.6 13.5l6.8 4M15.4 6.5l-6.8 4",
+phone:"M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2",
+wa:"M4 20l1.5-4A8 8 0 1 1 8 18.5z",chev:"M9 6l6 6-6 6",
+down:"M12 3v12M7 10l5 5 5-5M4 21h16",up:"M12 15V3M7 8l5-5 5 5M4 21h16",
+info:"M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v6M12 7.5v.5",
+globe:"M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18",
+restore:"M4 12a8 8 0 1 0 3-6.2M4 4v5h5"};
+function ic(n){return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="'+(P[n]||P.file)+'"/></svg>'}
+function paintIcons(){var e=document.querySelectorAll("[data-ic]");for(var i=0;i<e.length;i++)e[i].innerHTML=ic(e[i].getAttribute("data-ic"))}
+
+/* ---------- Data ---------- */
+var db=load();
+function load(){try{var d=JSON.parse(gs("docorg"));if(d&&d.folders&&d.files)return d}catch(e){}return{folders:[],files:[]}}
+function save(){try{localStorage.setItem("docorg",JSON.stringify(db));return true}catch(e){toast(t("storageFull"),1);return false}}
+var EXT={image:"jpg jpeg png gif svg webp bmp",video:"mp4 avi mov mkv webm",audio:"mp3 wav ogg m4a aac",pdf:"pdf",doc:"doc docx xls xlsx ppt pptx",txt:"txt"};
+var COL={image:"#2d8659",video:"#8e44ad",audio:"#d68910",pdf:"#c0392b",doc:"#2471a3",txt:"#5d6d7e",other:"#7f8c8d"};
+var CIC={image:"image",video:"video",audio:"audio"};
+function cat(n){var e=(n.split(".").pop()||"").toLowerCase();for(var k in EXT){if((" "+EXT[k]+" ").indexOf(" "+e+" ")>-1)return k}return"other"}
+function fmt(b){return b<1024?b+" B":b<1048576?(b/1024).toFixed(1)+" KB":(b/1048576).toFixed(1)+" MB"}
+function fById(id){for(var i=0;i<db.folders.length;i++)if(db.folders[i].id===id)return db.folders[i];return null}
+function path(id){var a=[],x=fById(id);while(x){a.unshift(x);x=fById(x.parent)}return a}
+function kids(id){return db.folders.filter(function(x){return x.parent===id})}
+function descend(id,out){out.push(id);kids(id).forEach(function(k){descend(k.id,out)});return out}
+function folderOpts(sel){var h='<option value="">'+esc(t("root"))+'</option>';
+ function w(p,d){kids(p).forEach(function(k){h+='<option value="'+k.id+'"'+(k.id===sel?" selected":"")+'>'+new Array(d+1).join("\u00A0\u00A0")+esc(k.name)+'</option>';w(k.id,d+1)})}
+ w(null,1);return h}
+
+/* ---------- UI helpers ---------- */
+function toast(m,err){var e=$("toast");e.textContent=m;e.className=err?"er":"";e.style.display="block";clearTimeout(toast.h);toast.h=setTimeout(function(){e.style.display="none"},2600)}
+function modal(title,body,btns){
+ var h='<h2>'+esc(title)+'</h2><div>'+body+'</div><div class="row">';
+ (btns||[]).forEach(function(b,i){h+='<button class="btn '+(b.c||"o")+'" data-b="'+i+'">'+esc(t(b.l))+'</button>'});
+ $("box").innerHTML=h+'</div>';$("ov").className="on";
+ var bs=$("box").querySelectorAll("[data-b]");
+ for(var i=0;i<bs.length;i++)(function(b){b.onclick=function(){if(b.f()!==false)closeM()}})(Object.assign(bs[i],{f:btns[i].f||function(){}}));
+}
+function closeM(){$("ov").className="";$("box").innerHTML="";if(urlKeep){URL.revokeObjectURL(urlKeep);urlKeep=null}}
+function ask(msg,ok,danger){modal(t("del"),'<p>'+esc(msg)+'</p>',[{l:"cancel"},{l:"yes",c:danger?"d":"",f:function(){setTimeout(ok,0)}}])}
+function blob(d){var p=d.split(","),m=(p[0].match(/:(.*?)[;,]/)||[0,"application/octet-stream"])[1],b=atob(p[1]),n=b.length,u=new Uint8Array(n);while(n--)u[n]=b.charCodeAt(n);return new Blob([u],{type:m})}
+function saveBlob(bl,name){var u=URL.createObjectURL(bl),a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(u)},4000)}
+
+/* ---------- Render ---------- */
+function applyLang(){
+ var h=document.documentElement;h.lang=lang;h.dir=lang==="ar"?"rtl":"ltr";document.title=t("appTitle");
+ var e=document.querySelectorAll("[data-i18n]");for(var i=0;i<e.length;i++)e[i].textContent=t(e[i].getAttribute("data-i18n"));
+ $("langTxt").textContent=lang==="ar"?"English":"عربي";render()}
+function setPg(p){pg=p;q="";render()}
+function render(){
+ var n=document.querySelectorAll("nav button");for(var i=0;i<n.length;i++)n[i].className=n[i].getAttribute("data-pg")===pg?"on":"";
+ var fb=pg==="home"?"flex":"none";$("fabFile").style.display=fb;$("fabFolder").style.display=fb;
+ var m=$("main");if(pg==="home")m.innerHTML=homeH();else if(pg==="add")m.innerHTML=addH();else m.innerHTML=setH();
+ paintIcons();bind()}
+function homeH(){
+ var h='<div class="sbox">'+ic("search")+'<input id="q" type="text" placeholder="'+esc(t("search"))+'" value="'+esc(q)+'"></div>';
+ var im=db.files.filter(function(x){return cat(x.name)==="image"}).length,pd=db.files.filter(function(x){return cat(x.name)==="pdf"}).length;
+ h+='<div class="stats"><div class="st"><b>'+db.folders.length+'</b><span>'+t("folders")+'</span></div><div class="st"><b>'+db.files.length+'</b><span>'+t("files")+'</span></div><div class="st"><b>'+im+'</b><span>'+t("images")+'</span></div><div class="st"><b>'+pd+'</b><span>'+t("pdfs")+'</span></div></div>';
+ var fo,fi;
+ if(q){var s=q.toLowerCase();fo=db.folders.filter(function(x){return x.name.toLowerCase().indexOf(s)>-1});fi=db.files.filter(function(x){return x.name.toLowerCase().indexOf(s)>-1});
+  h+='<div class="bar"><b>'+t("results")+'</b>'+tog()+'</div>'}
+ else{fo=kids(cur);fi=db.files.filter(function(x){return x.folder===cur});
+  h+='<div class="crumbs"><button data-go="">'+esc(t("root"))+'</button>';
+  path(cur).forEach(function(p){h+='<span class="sep">'+ic("chev")+'</span><button data-go="'+p.id+'">'+esc(p.name)+'</button>'});
+  h+='</div><div class="bar"><span></span>'+tog()+'</div>'}
+ if(!fo.length&&!fi.length)return h+'<div class="empty">'+ic("folder")+'<b>'+t(q?"noResults":"emptyT")+'</b>'+(q?"":t("emptyH"))+'</div>';
+ h+='<div class="items '+view+'">';
+ fo.forEach(function(x){var c=descend(x.id,[]),nf=db.files.filter(function(y){return c.indexOf(y.folder)>-1}).length;
+  h+='<div class="it"><div class="main" data-open="'+x.id+'"><div class="ico" style="background:#1a5f3a">'+ic("folder")+'</div><div class="nm"><b>'+esc(x.name)+'</b><small>'+(kids(x.id).length+nf)+' '+t("inside")+'</small></div></div>'+
+  '<div class="acts"><button data-ren="f:'+x.id+'">'+ic("edit")+'</button><button class="dg" data-del="f:'+x.id+'">'+ic("trash")+'</button></div></div>'});
+ fi.forEach(function(x){var c=cat(x.name);
+  h+='<div class="it"><div class="main" data-prev="'+x.id+'"><div class="ico" style="background:'+COL[c]+'">'+ic(CIC[c]||"file")+'</div><div class="nm"><b>'+esc(x.name)+'</b><small>'+fmt(x.size)+'</small></div></div>'+
+  '<div class="acts"><button data-prev="'+x.id+'">'+ic("eye")+'</button><button data-shr="'+x.id+'">'+ic("share")+'</button><button data-dl="'+x.id+'">'+ic("down")+'</button><button data-ren="x:'+x.id+'">'+ic("edit")+'</button><button class="dg" data-del="x:'+x.id+'">'+ic("trash")+'</button></div></div>'});
+ return h+'</div>'}
+function tog(){return '<div class="seg"><button data-v="grid" class="'+(view==="grid"?"on":"")+'" title="'+t("grid")+'">'+ic("grid")+'</button><button data-v="list" class="'+(view==="list"?"on":"")+'" title="'+t("list")+'">'+ic("list")+'</button></div>'}
+function addH(){return '<div class="card"><h3>'+t("addHint")+'</h3><button class="btn" data-a="folder">'+ic("folder")+t("newFolder")+'</button><button class="btn s" data-a="file">'+ic("up")+t("newFile")+'</button><p style="font-size:12px;color:#6c8074;margin-top:12px">'+t("tipLimit")+'</p></div>'}
+function setH(){return '<div class="card"><h3>'+t("contact")+'</h3><p>'+t("developer")+'</p><p class="ct">'+ic("phone")+'&nbsp;'+t("phone")+': 966542103430</p><p class="ct">'+ic("wa")+'&nbsp;'+t("whatsapp")+': 966509600071</p></div>'+
+ '<div class="card"><h3>'+t("backup")+'</h3><button class="btn" data-s="exp">'+ic("down")+t("exportB")+'</button><button class="btn s" data-s="imp">'+ic("restore")+t("importB")+'</button><button class="btn d" data-s="clr">'+ic("trash")+t("clearAll")+'</button></div>'+
+ '<div class="card"><button class="btn o" data-s="abt" style="margin-top:0">'+ic("info")+t("about")+'</button></div>'}
+
+/* ---------- Events ---------- */
+function bind(){
+ var m=$("main"),qi=$("q");
+ if(qi)qi.oninput=function(){q=qi.value.trim();var p=qi.selectionStart;render();var n=$("q");n.focus();try{n.setSelectionRange(p,p)}catch(e){}};
+ m.onclick=function(e){
+  var el=e.target;while(el&&el!==m&&!(el.attributes&&el.hasAttribute&&hasData(el)))el=el.parentNode;
+  if(!el||el===m)return;var a=el.attributes;
+  for(var i=0;i<a.length;i++){var k=a[i].name,v=a[i].value;
+   if(k==="data-go"){cur=v||null;render();return}
+   if(k==="data-open"){cur=v;q="";render();return}
+   if(k==="data-v"){view=v;ss("view",v);render();return}
+   if(k==="data-prev"){return previewF(v)}
+   if(k==="data-shr"){return shareF(v)}
+   if(k==="data-dl"){return dlF(v)}
+   if(k==="data-ren"){return renameF(v)}
+   if(k==="data-del"){return delF(v)}
+   if(k==="data-a"){return v==="folder"?newFolder():newFile()}
+   if(k==="data-s"){return settingsAct(v)}}};
+}
+function hasData(el){for(var i=0;i<el.attributes.length;i++)if(/^data-(go|open|v|prev|shr|dl|ren|del|a|s)$/.test(el.attributes[i].name))return true;return false}
+
+/* ---------- Actions ---------- */
+function newFolder(){
+ modal(t("newFolder"),'<label>'+t("folderName")+'</label><input type="text" id="fn" maxlength="60"><label>'+t("parentFolder")+'</label><select id="fp">'+folderOpts(cur)+'</select>',
+ [{l:"cancel"},{l:"create",c:"",f:function(){var n=$("fn").value.trim();if(!n){toast(t("errName"),1);return false}
+  db.folders.push({id:uid(),name:n,parent:$("fp").value||null});if(save()){toast(t("created"));render()}else db.folders.pop()}}]);
+ setTimeout(function(){var i=$("fn");if(i)i.focus()},100)}
+function newFile(){
+ modal(t("newFile"),'<label>'+t("parentFolder")+'</label><select id="fp">'+folderOpts(cur)+'</select><label>'+t("chooseFile")+'</label><input type="file" id="fi" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.svg,.webp,.bmp,.mp4,.avi,.mov,.mkv,.webm,.mp3,.wav,.ogg,.m4a,.aac,.txt,.zip,.rar,.7z,image/*,video/*,audio/*"><p style="font-size:12px;color:#6c8074">'+t("tipLimit")+'</p>',
+ [{l:"cancel"},{l:"save",c:"",f:function(){var fs=$("fi").files,fo=$("fp").value||null;if(!fs.length){toast(t("chooseFile"),1);return false}
+  setTimeout(function(){upload(Array.prototype.slice.call(fs),fo)},50)}}])}
+function upload(list,fo){
+ var ok=0;$("ld").className="on";
+ (function next(){var fl=list.shift();if(!fl){$("ld").className="";if(ok)toast(f("uploaded",ok));render();return}
+  if(fl.size>10485760){toast(f("tooBig",fl.name),1);return next()}
+  var r=new FileReader();
+  r.onload=function(){db.files.push({id:uid(),name:fl.name,folder:fo,size:fl.size,data:r.result,date:Date.now()});
+   if(save())ok++;else db.files.pop();setTimeout(next,10)};
+  r.onerror=function(){toast(t("errRead"),1);next()};
+  try{r.readAsDataURL(fl)}catch(e){toast(t("errRead"),1);next()}})()}
+function fileById(id){for(var i=0;i<db.files.length;i++)if(db.files[i].id===id)return db.files[i]}
+function previewF(id){var x=fileById(id);if(!x)return;var c=cat(x.name),b="";
+ try{
+  if(c==="image"||c==="video"||c==="audio"||c==="pdf"){urlKeep=URL.createObjectURL(blob(x.data));
+   b=c==="image"?'<img src="'+urlKeep+'">':c==="video"?'<video controls src="'+urlKeep+'"></video>':c==="audio"?'<audio controls src="'+urlKeep+'"></audio>':'<iframe src="'+urlKeep+'"></iframe>'}
+  else if(c==="txt"){var s=atob(x.data.split(",")[1]);try{s=decodeURIComponent(escape(s))}catch(e){}b='<pre>'+esc(s.slice(0,20000))+'</pre>'}
+  else b='<p>'+t("noPrev")+'</p>'}catch(e){b='<p>'+t("errRead")+'</p>'}
+ modal(x.name,'<div class="pv">'+b+'</div>',[{l:"download",c:"s",f:function(){dlF(id);return false}},{l:"close"}])}
+function dlF(id){var x=fileById(id);if(!x)return;try{saveBlob(blob(x.data),x.name);toast(t("downloaded"))}catch(e){toast(t("errRead"),1)}}
+function shareF(id){var x=fileById(id);if(!x)return;
+ modal(t("shareTitle"),'<ul class="steps"><li>'+t("step1")+'</li><li>'+t("step2")+'</li><li>'+t("step3")+'</li></ul><label>'+t("phoneOpt")+'</label><input type="tel" id="wp" placeholder="9665xxxxxxxx">',
+ [{l:"cancel"},{l:"openWA",c:"s",f:function(){var p=($("wp").value||"").replace(/\D/g,"");dlF(id);
+  var u="https://wa.me/"+p+"?text="+encodeURIComponent(f("shareMsg",x.name));setTimeout(function(){window.location.href=u},900)}}])}
+function renameF(k){var tp=k.charAt(0),id=k.slice(2),o=tp==="f"?fById(id):fileById(id);if(!o)return;
+ modal(t("rename"),'<label>'+t("name")+'</label><input type="text" id="rn" maxlength="80" value="'+esc(o.name)+'">',
+ [{l:"cancel"},{l:"save",c:"",f:function(){var n=$("rn").value.trim();if(!n){toast(t("errName"),1);return false}
+  var old=o.name;o.name=n;if(save()){toast(t("renamed"));render()}else o.name=old}}])}
+function delF(k){var tp=k.charAt(0),id=k.slice(2),o=tp==="f"?fById(id):fileById(id);if(!o)return;
+ ask(f(tp==="f"?"confDelFolder":"confDel",o.name),function(){
+  var bk=JSON.stringify(db);
+  if(tp==="f"){var ids=descend(id,[]);db.folders=db.folders.filter(function(x){return ids.indexOf(x.id)<0});db.files=db.files.filter(function(x){return ids.indexOf(x.folder)<0});if(ids.indexOf(cur)>-1)cur=null}
+  else db.files=db.files.filter(function(x){return x.id!==id});
+  save();toast(t("deleted"));render()},true)}
+function settingsAct(a){
+ if(a==="exp"){try{saveBlob(new Blob([JSON.stringify(db)],{type:"application/json"}),"document-organizer-backup.json");toast(t("exported"))}catch(e){toast(t("errRead"),1)}}
+ else if(a==="imp"){$("impIn").value="";$("impIn").click()}
+ else if(a==="clr"){ask(t("clear1"),function(){ask(t("clear2"),function(){db={folders:[],files:[]};cur=null;save();toast(t("cleared"));render()},true)},true)}
+ else if(a==="abt"){modal(t("about"),'<p>'+t("aboutTxt")+'</p><p><b>'+t("developer")+'</b></p><p class="ct">'+ic("phone")+'&nbsp;'+t("phone")+': 966542103430</p><p class="ct">'+ic("wa")+'&nbsp;'+t("whatsapp")+': 966509600071</p>',[{l:"close"}])}}
+$("impIn").onchange=function(){var fl=this.files[0];if(!fl)return;var r=new FileReader();
+ r.onload=function(){try{var d=JSON.parse(r.result);if(!d||!(d.folders instanceof Array)||!(d.files instanceof Array))throw 1;
+  ask(t("importConf"),function(){db=d;cur=null;if(save()){toast(t("imported"));render()}})}catch(e){toast(t("importErr"),1)}};
+ r.onerror=function(){toast(t("errRead"),1)};r.readAsText(fl)};
+
+/* ---------- Init ---------- */
+$("langBtn").onclick=function(){lang=lang==="ar"?"en":"ar";ss("lang",lang);applyLang()};
+$("fabFolder").onclick=newFolder;$("fabFile").onclick=newFile;
+$("ov").onclick=function(e){if(e.target===$("ov"))closeM()};
+var nb=document.querySelectorAll("nav button");for(var i=0;i<nb.length;i++)(function(b){b.onclick=function(){setPg(b.getAttribute("data-pg"))}})(nb[i]);
+paintIcons();applyLang();
+})();
+</script>
+</body>
+</html>
